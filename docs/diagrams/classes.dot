@@ -1,0 +1,56 @@
+digraph Classes {
+  graph [rankdir=TB, bgcolor="white", pad="0.16", nodesep="0.30", ranksep="0.43", splines=polyline, fontname="Arial"];
+  node [shape=plain, fontname="Arial", fontsize=15];
+  edge [color="#657052", fontname="Arial", fontsize=13, penwidth=1.4];
+  ui [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#79836a" CELLSPACING="0">
+    <TR><TD BGCOLOR="#eff2e9">«module» <B>React UI</B></TD></TR>
+    <TR><TD ALIGN="LEFT">+ api(path, options)</TD></TR></TABLE>>];
+  api [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#79836a" CELLSPACING="0">
+    <TR><TD BGCOLOR="#eff2e9">«module» <B>HTTP API</B></TD></TR>
+    <TR><TD ALIGN="LEFT">+ createApi(store)</TD></TR></TABLE>>];
+  cli [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#79836a" CELLSPACING="0">
+    <TR><TD BGCOLOR="#eff2e9">«module» <B>Локальные команды</B></TD></TR>
+    <TR><TD ALIGN="LEFT">admin, orders</TD></TR></TABLE>>];
+  accounts [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#6a755d" CELLSPACING="0">
+    <TR><TD BGCOLOR="#e6f4c4"><B>Accounts</B></TD></TR>
+    <TR><TD ALIGN="LEFT">+ store: PlantStore<BR ALIGN="LEFT"/>+ db: DatabaseSync</TD></TR><HR/>
+    <TR><TD ALIGN="LEFT">+ create(input, role, actorId)<BR ALIGN="LEFT"/>+ login(input)<BR ALIGN="LEFT"/>+ user(request)<BR ALIGN="LEFT"/>+ setActive(actorId, id, active)<BR ALIGN="LEFT"/>+ changePassword(account, current, next)</TD></TR>
+    </TABLE>>];
+  store [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#6a755d" CELLSPACING="0">
+    <TR><TD BGCOLOR="#e6f4c4"><B>PlantStore</B></TD></TR>
+    <TR><TD ALIGN="LEFT">+ db: DatabaseSync</TD></TR><HR/>
+    <TR><TD ALIGN="LEFT">+ catalog(includeArchived)<BR ALIGN="LEFT"/>+ saveProduct(id, input)<BR ALIGN="LEFT"/>+ createOrder(code, input, customerId)<BR ALIGN="LEFT"/>+ customerOrder(id, customerId)<BR ALIGN="LEFT"/>+ claimOrder(customerId, id, code)<BR ALIGN="LEFT"/>+ updateStatus(id, status)<BR ALIGN="LEFT"/>+ transaction(work)</TD></TR>
+    </TABLE>>];
+  db [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#6a755d" CELLSPACING="0">
+    <TR><TD BGCOLOR="#e6f4c4"><B>DatabaseSync</B></TD></TR>
+    <TR><TD ALIGN="LEFT">+ prepare(sql)<BR ALIGN="LEFT"/>+ exec(sql)<BR ALIGN="LEFT"/>+ close()</TD></TR>
+    </TABLE>>];
+  error [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#6a755d" CELLSPACING="0">
+    <TR><TD BGCOLOR="#e6f4c4"><B>OrderError</B></TD></TR>
+    <TR><TD ALIGN="LEFT">+ status: number</TD></TR>
+    </TABLE>>];
+  base [label=<
+    <TABLE CELLPADDING="7" BORDER="1" CELLBORDER="0" COLOR="#6a755d" CELLSPACING="0">
+    <TR><TD BGCOLOR="#e6f4c4"><B>Error</B></TD></TR>
+    </TABLE>>];
+  ui -> api [style=dashed, arrowhead=vee, label="HTTP / JSON"];
+  api -> accounts [style=dashed, arrowhead=vee];
+  api -> store [style=dashed, arrowhead=vee];
+  cli -> accounts [style=dashed, arrowhead=vee];
+  cli -> store [style=dashed, arrowhead=vee];
+  accounts -> store [arrowhead=vee, constraint=false];
+  accounts -> error [style=dashed, arrowhead=vee];
+  store -> error [style=dashed, arrowhead=vee];
+  store -> db [dir=both, arrowtail=diamond, arrowhead=none, headlabel="1"];
+  error -> base [arrowhead=empty];
+  {rank=same; api; cli;}
+  {rank=same; accounts; store;}
+  {rank=same; db; error;}
+}

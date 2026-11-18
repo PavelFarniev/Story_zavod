@@ -1,0 +1,69 @@
+digraph ERD {
+  graph [rankdir=TB, bgcolor="white", pad="0.16", nodesep="0.43", ranksep="0.48", splines=polyline, fontname="Arial"];
+  node [shape=plain, fontname="Arial", fontsize=15];
+  edge [dir=none, fontname="Arial", fontsize=14, color="#66705a", fontcolor="#272f1d", penwidth=1.4, labeldistance=1.4];
+  users [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>users</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ email  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">name, password_hash, role  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">active  INTEGER, created_at  TEXT</TD></TR>
+    </TABLE>>];
+  sessions [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>sessions</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK token_hash  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">FK user_id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">expires_at  INTEGER</TD></TR>
+    </TABLE>>];
+  categories [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>categories</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK id  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">title  TEXT</TD></TR>
+    </TABLE>>];
+  products [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>products</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ sku  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">FK category_id  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">name, spec, unit, description  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">price, stock, active  INTEGER</TD></TR>
+    </TABLE>>];
+  photos [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>product_photos</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK, FK product_id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">mime  TEXT, bytes  BLOB</TD></TR>
+    </TABLE>>];
+  orders [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>orders</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">UQ code_hash  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">payload_hash  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">FK customer_id  INTEGER, NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">name, phone, address  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">method, comment, status, created_at  TEXT</TD></TR>
+      <TR><TD ALIGN="LEFT">total  INTEGER</TD></TR>
+    </TABLE>>];
+  items [label=<
+    <TABLE CELLPADDING="5" CELLBORDER="0" BORDER="1" COLOR="#6a755d" CELLSPACING="0">
+      <TR><TD BGCOLOR="#e6f4c4"><B>order_items</B></TD></TR>
+      <TR><TD ALIGN="LEFT">PK, FK order_id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">PK, FK product_id  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">quantity, unit_price  INTEGER</TD></TR>
+      <TR><TD ALIGN="LEFT">item_name, item_unit  TEXT</TD></TR>
+    </TABLE>>];
+  {rank=same; users; categories;}
+  {rank=same; sessions; orders; products;}
+  {rank=same; items; photos;}
+  users -> sessions [taillabel="1", headlabel="0..*"];
+  users -> orders [taillabel="0..1", headlabel="0..*"];
+  categories -> products [taillabel="1", headlabel="0..*"];
+  products -> photos [taillabel="1", headlabel="0..1"];
+  products -> items [taillabel="1", headlabel="0..*"];
+  orders -> items [taillabel="1", headlabel="1..*"];
+}

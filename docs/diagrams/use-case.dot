@@ -1,0 +1,41 @@
+digraph UseCase {
+  graph [rankdir=LR, bgcolor="white", pad="0.2", nodesep="0.17", ranksep="0.57", splines=polyline, fontname="Arial"];
+  node [fontname="Arial", fontsize=16, shape=ellipse, style=filled, fillcolor="#f4f6ee", color="#545e43", margin="0.13,0.09"];
+  edge [dir=none, color="#68705b", penwidth=1.25];
+  visitor [shape=box, style="rounded,filled", fillcolor="#def58c", label="«actor»\nПосетитель"];
+  buyer [shape=box, style="rounded,filled", fillcolor="#def58c", label="«actor»\nПокупатель"];
+  manager [shape=box, style="rounded,filled", fillcolor="#def58c", label="«actor»\nМенеджер"];
+  admin [shape=box, style="rounded,filled", fillcolor="#def58c", label="«actor»\nАдминистратор"];
+  {rank=same; visitor; buyer;}
+  {rank=same; manager; admin;}
+  subgraph cluster_system {
+    label="Сайт завода ФОРМА"; style=rounded; color="#818677"; margin=18; fontname="Arial"; fontsize=20;
+    browse [label="Просмотреть каталог\nи карту самовывоза"];
+    create [label="Собрать и отправить\nзаявку"];
+    track [label="Проверить статус\nпо номеру и коду"];
+    register [label="Зарегистрировать\nаккаунт покупателя"];
+    mine [label="Открыть свои заявки\nи добавить гостевую"];
+    signin [label="Войти в кабинет"];
+    orders [label="Просмотреть заявки\nи изменить статус"];
+    people [label="Управлять\nаккаунтами"];
+    catalog [label="Управлять каталогом\nи фотографиями"];
+    {rank=same; browse; create; track; register; mine;}
+    {rank=same; signin; orders; people; catalog;}
+    browse -> create -> track -> register -> mine [style=invis];
+    signin -> orders -> people -> catalog [style=invis];
+    track -> orders [style=invis, weight=15];
+  }
+  visitor -> browse;
+  visitor -> create;
+  visitor -> track;
+  visitor -> register;
+  buyer -> visitor [dir=forward, arrowhead=empty, constraint=false];
+  buyer -> mine;
+  buyer -> signin;
+  signin -> manager;
+  orders -> manager;
+  signin -> admin;
+  orders -> admin;
+  people -> admin;
+  catalog -> admin;
+}
